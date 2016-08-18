@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}{{ filename }}{% endblock %}
+{% block content %}
+    <div style="font-size:0.5em">Note: To be improved.</div>
+    <img src="{{ url_for('show_raw', file=file) }}" alt="{{ filename }}" />
+    <a href="{{ url_for('show_raw', file=file) }}">Raw<a>
+{% endblock %}
