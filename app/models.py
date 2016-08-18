@@ -1,13 +1,15 @@
-from sqlalchemy import Column, Integer, String
 from .database import Base
+import datetime.utcnow
+from sqlalchemy import Column, Integer, String, DateTime
 
 
 class Picture(Base):
     __tablename__ = 'Pictures'
     id = Column(Integer, primary_key=True)
-    filename = Column(String(5), unique=True)
+    filename = Column(String(5), unique=True, index=True)
     filetype = Column(String(5))
     visitors = Column(String)
+    # uploaded_by = Column(String(25), index=True)
 
     def __init__(self, filename, filetype, visitors='[]'):
         self.filename = filename
@@ -16,3 +18,22 @@ class Picture(Base):
 
     def __repr__(self):
         return '<Picture %r>' % self.filename
+
+
+class User(Base):
+    __tablename__ = 'Users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String(25), unique=True, index=True)
+    password = Column(String)
+    email = Column(String(50), unique=True, index=True)
+    registered_on = Column(DateTime)
+    ip = Column(String(46))
+
+    def __init__(self, username, password, email, ip):
+        self.username = username
+        self.password = password
+        self.email = email
+        self.registered_on = datetime.utcnow()
+
+    def __repr__(self):
+        return '<User %r>' % self.username
