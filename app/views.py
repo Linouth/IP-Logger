@@ -107,6 +107,7 @@ def login():
 
 
 def ip():
+    ''' Some tests regarding the remote IP and proxy usage '''
     return jsonify({
         'remote_addr1': request.remote_addr,
         'remote_addr2': request.environ.get('REMOTE_ADDR'),
