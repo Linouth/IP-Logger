@@ -1,4 +1,5 @@
-from . import get_db
+from .database import db_session
+from .models import Picture
 import random
 import string
 
@@ -10,11 +11,11 @@ def gen_filename(length=5, source=string.ascii_letters+string.digits):
         length -- length of string to generate
         source -- characters to use in random string
     '''
-    db = get_db()
     while True:
         filename = ''.join(random.choice(source) for __ in range(length))
-        cur = db.execute('select * from Pictures where filename=?', (filename,))
-        if not cur.fetchone():
+        pic = Picture.query.filter(Picture.filename == filename).first()
+        print(pic)
+        if not pic:
             break
     return filename
 
@@ -24,9 +25,3 @@ def get_extension(filename):
         filename -- filename from which to return the extension
     '''
     return filename.rsplit('.', 1)[1]
-
-
-def fetch_file(filename):
-    db = get_db()
-    cur = db.execute('select * from Pictures where filename=?', (filename,))
-    return cur.fetchone()

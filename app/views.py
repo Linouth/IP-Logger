@@ -1,6 +1,8 @@
-from . import app, get_db, utils
+from . import app, utils
+from .database import db_session
+from .models import Picture
 # from . import forms
-from flask import render_template, request, flash, redirect, url_for, session, send_from_directory, jsonify
+from flask import render_template, request, flash, redirect, url_for, send_from_directory, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
 import json
 import os
@@ -13,6 +15,7 @@ def index():
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
+    ''' Upload picture '''
     if request.method == 'POST':
         def no_file():
             flash('No file found')
@@ -30,45 +33,43 @@ def upload():
             return no_file()
 
         if file and allowed_file(file.filename):
-            db = get_db()
             filename = utils.gen_filename()
             extension = utils.get_extension(file.filename)
-            filen = filename + '.' + extension
-            img = dict(
-                    filename=filename,
-                    filetype=extension
-            )
+            savename = filename + '.' + extension
 
-            db.execute('insert into Pictures (filename, filetype) values \
-                    (:filename, :filetype)', img)
-            db.commit()
-            file.save(os.path.join(app.config['UPLOAD_DIR'], filen))
+            pic = Picture(filename, extension)
+            db_session.add(pic)
+            db_session.commit()
+
+            file.save(os.path.join(app.config['UPLOAD_DIR'], savename))
             return redirect(url_for('show', filename=filename))
-
     return render_template('upload.html')
 
 
 @app.route('/img/<filename>')
 def show(filename):
-    filetype = utils.fetch_file(filename)['filetype']
+    ''' Render Show page '''
+    pic = Picture.query.filter(Picture.filename == filename).first()
+    if not pic:
+        return 'File not found.'
+    filetype = pic.filetype
     file = filename + '.' + filetype
     return render_template('show.html', filename=filename, file=file)
 
 
 @app.route('/img/raw/<file>')
 def show_raw(file):
-    db = get_db()
+    ''' Render raw image and save remote ip to database '''
     ip = request.environ.get('REMOTE_ADDR')
-    # TODO: proxy = request.environ.get('HTTP_X_FORWARDED_FOR')  (Proxy Support)
+    # TODO: proxy = request.environ.get('HTTP_X_FORWARDED_FOR') (Proxy Support)
 
     filename = file.split('.', 1)[0]
-    visitors = json.loads(utils.fetch_file(filename)['visitors'])
+    pic = Picture.query.filter(Picture.filename == filename).first()
+    visitors = json.loads(pic.visitors)
     if ip not in visitors:
         visitors.append(ip)
-        db.execute('update Pictures set visitors=? where filename=?',
-                   (json.dumps(visitors), filename))
-        db.commit()
-
+        pic.visitors = json.dumps(visitors)
+        db_session.commit()
     return send_from_directory(app.config['UPLOAD_DIR'], file)
 
 

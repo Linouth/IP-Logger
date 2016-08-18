@@ -1,7 +1,7 @@
-from flask import Flask, g
+from .database import db_session
+from flask import Flask
 from flask_login import LoginManager
 import os
-import sqlite3
 
 
 app = Flask(__name__)
@@ -19,37 +19,14 @@ app.config.update(dict(
 ))
 
 
-def connect_db():
-    ' Create and return database connection '
-    db = sqlite3.connect(app.config['DATABASE'])
-    db.row_factory = sqlite3.Row
-    return db
-
-
-def get_db():
-    ' Return (and create) database connection '
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
-    return g.sqlite_db
-
-
 @app.teardown_appcontext
-def close_db(error):
-    ' Close database connection '
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
-
-
-def init_db():
-    ' Initialize database connection '
-    db = get_db()
-    with app.open_resource('schema.sql', mode='r') as f:
-        db.cursor().executescript(f.read())
-    db.commit()
+def shutdown_session(exception=None):
+    db_session.remove()
 
 
 @app.cli.command('initdb')
 def initdb_command():
+    from .database import init_db
     init_db()
     print('Initializing the database')
 
