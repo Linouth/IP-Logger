@@ -41,7 +41,7 @@ def upload():
             extension = utils.get_extension(file.filename)
             savename = filename + '.' + extension
 
-            pic = Picture(filename, extension)
+            pic = Picture(filename, extension, current_user.username)
             db_session.add(pic)
             db_session.commit()
 
@@ -124,8 +124,11 @@ def login():
     username = form.username.data
     password = form.password.data
     user = User.query.filter(User.username == username).first()
+    if user is None:
+        flash('Invalid.')
+        return redirect(url_for('login'))
     hashed = user.password
-    if user is None or bcrypt.hashpw(password, hashed) != hashed:
+    if bcrypt.hashpw(password, hashed) != hashed:
         flash('Invalid.')
         return redirect(url_for('login'))
     login_user(user)

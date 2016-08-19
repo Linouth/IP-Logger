@@ -9,11 +9,12 @@ class Picture(Base):
     filename = Column(String(5), unique=True, index=True)
     filetype = Column(String(5))
     visitors = Column(String)
-    # TODO: uploaded_by = Column(String(25), index=True)
+    uploaded_by = Column(String(25), index=True)
 
-    def __init__(self, filename, filetype, visitors='[]'):
+    def __init__(self, filename, filetype, uploaded_by, visitors='[]'):
         self.filename = filename
         self.filetype = filetype
+        self.uploaded_by = uploaded_by
         self.visitors = visitors
 
     def __repr__(self):
