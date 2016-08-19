@@ -34,6 +34,7 @@ class User(Base):
         self.password = password
         self.email = email
         self.registered_on = datetime.utcnow()
+        self.ip = ip
 
     def is_authenticated(self):
         return True

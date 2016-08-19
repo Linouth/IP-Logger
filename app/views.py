@@ -1,9 +1,12 @@
-from . import app, utils
+from . import app, utils, forms
 from .database import db_session
-from .models import Picture
-# from . import forms
-from flask import render_template, request, flash, redirect, url_for, send_from_directory, jsonify
-from flask_login import login_user, logout_user, current_user, login_required
+from .models import Picture, User
+import bcrypt
+from flask import (
+        render_template, request, flash, redirect, url_for,
+        send_from_directory, jsonify
+)
+from flask_login import login_user, logout_user, login_required, current_user
 import json
 import os
 
@@ -14,6 +17,7 @@ def index():
 
 
 @app.route('/upload', methods=['GET', 'POST'])
+@login_required
 def upload():
     ''' Upload picture '''
     if request.method == 'POST':
@@ -75,37 +79,69 @@ def show_raw(file):
 
 ''' User pages '''
 
-"""
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    form = forms.RegistrationForm(request.form)
+    ''' Register user '''
+    form = forms.RegisterForm()
     if request.method == 'GET':
-        return render_template('register', form=form)
-    if request.method == 'POST' and form.validate():
-        forms.User(form.username.data, form.email.data,
-                   form.password.data, request.environ['REMOTE_ADDR'])
-        flash('User successfully registered')
-        return redirect(url_for('login'))
+        return render_template('register.html', form=form)
+
+    if not form.validate_on_submit():
+        es = []
+        for errors in form.errors.values():
+            for error in errors:
+                es.append(error)
+        flash(' - '.join(es))
+        return redirect(url_for('register'))
+
+    # Check if username or password already exist in database.
+    ex = User.query.filter(User.username == form.username.data).first()
+    if ex is not None:
+        flash('Username already exists')
+        return redirect(url_for('register'))
+    ex = User.query.filter(User.email == form.email.data).first()
+    if ex is not None:
+        flash('Email already registered')
+        return redirect(url_for('register'))
+
+    # Hash password and save data in database.
+    hashed = bcrypt.hashpw(form.password.data, bcrypt.gensalt())
+    user = User(form.username.data, hashed,
+                form.email.data, request.remote_addr)
+    db_session.add(user)
+    db_session.commit()
+    flash('Welcome, you can continue now.')
+    return redirect(url_for('login'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = forms.LoginForm(request.form)
+    ''' Login user '''
+    form = forms.LoginForm()
     if request.method == 'GET':
-        return render_template('login', form=form)
+        return render_template('login.html', form=form)
     username = form.username.data
     password = form.password.data
-
-    user = forms.User(username, password)
-    if not user.is_authenticated():
-        flash('Username of Password is invalid', 'error')
+    user = User.query.filter(User.username == username).first()
+    hashed = user.password
+    if user is None or bcrypt.hashpw(password, hashed) != hashed:
+        flash('Invalid.')
         return redirect(url_for('login'))
     login_user(user)
-    flash('Logged in successfully')
-    return redirect(url_for('upload'))
-"""
+    return redirect(request.args.get('next') or url_for('upload'))
 
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+
+''' Just some tests '''
+
+
+@app.route('/ip')
 def ip():
     ''' Some tests regarding the remote IP and proxy usage '''
     return jsonify({
@@ -114,4 +150,12 @@ def ip():
         'HTTP_X_FORWARDED_FOR': request.environ.get('HTTP_X_FORWARDED_FOR'),
         'X-Forwarded-For': request.environ.get('X-Forwarded-For'),
         'X-Client-IP': request.environ.get('X-Client-IP')
-})
+    })
+
+
+@app.route('/info')
+def info():
+    return '''<h2>Info Page<h2>
+              <ul>
+                <li>{}</li>
+              </ul>'''.format(current_user.username)

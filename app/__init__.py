@@ -1,4 +1,5 @@
 from .database import db_session
+from .models import User
 from flask import Flask
 from flask_login import LoginManager
 import os
@@ -29,6 +30,11 @@ def initdb_command():
     from .database import init_db
     init_db()
     print('Initializing the database')
+
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 from . import views
