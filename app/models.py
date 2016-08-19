@@ -1,5 +1,5 @@
 from .database import Base
-import datetime.utcnow
+from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime
 
 
@@ -9,7 +9,7 @@ class Picture(Base):
     filename = Column(String(5), unique=True, index=True)
     filetype = Column(String(5))
     visitors = Column(String)
-    # uploaded_by = Column(String(25), index=True)
+    # TODO: uploaded_by = Column(String(25), index=True)
 
     def __init__(self, filename, filetype, visitors='[]'):
         self.filename = filename
@@ -34,6 +34,18 @@ class User(Base):
         self.password = password
         self.email = email
         self.registered_on = datetime.utcnow()
+
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return str(self.id)
 
     def __repr__(self):
         return '<User %r>' % self.username
