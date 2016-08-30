@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Uploads{% endblock %}
+{% block content %}
+    <h1>{{ upload.filename }}</h1>
+    <table>
+        <tr>
+            <th>IP</th>
+        </tr>
+        {% for ip in visitors %}
+            <tr>
+                <td>{{ ip }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

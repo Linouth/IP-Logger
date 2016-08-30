@@ -137,8 +137,28 @@ def login():
 
 @app.route('/logout')
 def logout():
+    ''' Logout user '''
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/uploads')
+@login_required
+def uploads():
+    ''' Render page with all uploaded images '''
+    uploads = Picture.query.filter(Picture.uploaded_by == current_user.username)
+    return render_template('uploads.html', user=current_user, uploads=uploads)
+
+
+@app.route('/uploads/<filename>')
+@login_required
+def upload_info(filename):
+    ''' Show logged ip's and visits of uploaded image '''
+    upload = Picture.query.filter(Picture.filename == filename).first()
+    if upload.uploaded_by != current_user.username:
+        return redirect(url_for('upload'))
+    visitors = json.loads(upload.visitors)
+    return render_template('picture_info.html', upload=upload, visitors=visitors)
 
 
 ''' Just some tests '''
@@ -161,4 +181,5 @@ def info():
     return '''<h2>Info Page<h2>
               <ul>
                 <li>{}</li>
-              </ul>'''.format(current_user.username)
+                <li>{}</li>
+              </ul>'''.format(current_user.username, url_for('uploads'))

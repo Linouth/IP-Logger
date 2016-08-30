@@ -12,6 +12,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+app.jinja_env.lstrip_blocks = True
+app.jinja_env.trim_blocks = True
+
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'sqlite.db'),
     SECRET_KEY='8!93[0n6F-ti79sk(46%DrHFV',
