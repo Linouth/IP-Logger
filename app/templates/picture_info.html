@@ -5,10 +5,12 @@
     <table>
         <tr>
             <th>IP</th>
+            <th>User-Agent</th>
         </tr>
         {% for ip in visitors %}
             <tr>
-                <td>{{ ip }}</td>
+                <td>{{ ip.get('ip') }}</td>
+                <td>{{ ip.get('user_agent') }}</td>
             </tr>
         {% endfor %}
     </table>

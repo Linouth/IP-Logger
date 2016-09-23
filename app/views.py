@@ -1,6 +1,6 @@
 from . import app, utils, forms
 from .database import db_session
-from .models import Picture, User
+from .models import Picture, User, Invite
 import bcrypt
 from flask import (
         render_template, request, flash, redirect, url_for,
@@ -11,12 +11,12 @@ import json
 import os
 
 
-@app.route('/')
-def index():
-    return 'Hello.'
+# @app.route('/')
+# def index():
+#     return 'Hello.'
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 @login_required
 def upload():
     ''' Upload picture '''
@@ -66,12 +66,17 @@ def show_raw(file):
     ''' Render raw image and save remote ip to database '''
     ip = request.environ.get('REMOTE_ADDR')
     # TODO: proxy = request.environ.get('HTTP_X_FORWARDED_FOR') (Proxy Support)
+    agent = request.headers.get('User-Agent')
 
     filename = file.split('.', 1)[0]
     pic = Picture.query.filter(Picture.filename == filename).first()
     visitors = json.loads(pic.visitors)
-    if ip not in visitors:
-        visitors.append(ip)
+
+    gen = (i for i in visitors if ip in i.get('ip'))
+    if not sum(1 for x in gen):
+        visitors.append(dict(
+                    ip=ip,
+                    user_agent=agent))
         pic.visitors = json.dumps(visitors)
         db_session.commit()
     return send_from_directory(app.config['UPLOAD_DIR'], file)
@@ -105,10 +110,21 @@ def register():
         flash('Email already registered')
         return redirect(url_for('register'))
 
+    # Check if invite key is valid
+    invite = Invite.query.filter(Invite.invite_key ==
+                                 form.invite_key.data).first()
+    if invite is None:
+        flash('Invite key does not exist.')
+        return redirect(url_for('register'))
+    if not invite.available:
+        flash('Invite key already used.')
+        return redirect(url_for('register'))
+    invite.available = False
+
     # Hash password and save data in database.
     hashed = bcrypt.hashpw(form.password.data, bcrypt.gensalt())
-    user = User(form.username.data, hashed,
-                form.email.data, request.remote_addr)
+    user = User(form.username.data, hashed, form.email.data,
+                request.remote_addr, form.invite_key.data)
     db_session.add(user)
     db_session.commit()
     flash('Welcome, you can continue now.')
@@ -139,7 +155,7 @@ def login():
 def logout():
     ''' Logout user '''
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/uploads')
@@ -183,3 +199,14 @@ def info():
                 <li>{}</li>
                 <li>{}</li>
               </ul>'''.format(current_user.username, url_for('uploads'))
+
+
+@app.route('/geninv')
+@app.route('/geninv/<int:priv>')
+def gen_invite(priv=0):
+    ''' Generate new invite '''
+    invite_key = utils.gen_invite()
+    invite = Invite(invite_key, priv=priv)
+    db_session.add(invite)
+    db_session.commit()
+    return invite_key
