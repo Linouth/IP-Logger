@@ -19,7 +19,8 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'sqlite.db'),
     SECRET_KEY='8!93[0n6F-ti79sk(46%DrHFV',
     ALLOWED_EXTENSIONS=set(['jpg', 'png', 'gif', 'jpeg']),
-    UPLOAD_DIR=os.path.join(app.root_path, 'uploads')
+    UPLOAD_DIR=os.path.join(app.root_path, 'uploads'),
+    MAX_CONTENT_LENGTH=64*1024*1024
 ))
 
 
