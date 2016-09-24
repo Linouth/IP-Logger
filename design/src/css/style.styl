@@ -9,7 +9,7 @@ body, html
     height 100%
 *
     box-sizing border-box
-    // font-family Tahoma,Verdana,Segoe,sans-serif
+    font-family 'robotolight', Arial, sans-serif
 body
     background url('https://hd.unsplash.com/photo-1470104240373-bc1812eddc9f')
     background-size cover
@@ -25,11 +25,9 @@ body
         // background rgba(black, 0.3)
         z-index -1
 
-div#upload
-    width 600px
-    height 300px
+
+div.block
     background $white
-    // border 1px solid $gray
     box-shadow 0px 0px 50px rgba(black, 0.5)
 
     position absolute
@@ -38,9 +36,12 @@ div#upload
     transform translate(-50%, -50%)
 
     text-align center
-    font-family 'robotolight', Arial, sans-serif
     line-height 10px
     border-radius 10px
+
+div#upload
+    width 600px
+    height 300px
 
     & div.info
         width 50%
@@ -50,9 +51,7 @@ div#upload
         transform translateX(-50%)
         line-height 5px
 
-        background -webkit-linear-gradient($blue, $lightblue)
-        -webkit-background-clip text
-        -webkit-text-fill-color transparent
+        gradient-text($blue, $lightblue)
 
         display flex
         flex-wrap wrap
@@ -76,8 +75,78 @@ div#upload
         height 50px
         line-height 50px
         color white
-        gradient(90deg, #0277BD, #29B6F6)
+        gradient(90deg, $blue, $lightblue)
         border-radius 0 0 10px 10px
+
+div.logreg
+    div
+        position absolute
+        width 100%
+
+    div.info
+        top 0
+        height calc(80% - 55px)
+        border-radius 10px 10px 0 0
+        line-height initial
+
+        padding 15px
+
+        h1
+            color $blue
+            gradient-text($blue, $lightblue)
+
+        input[type=text], input[type=password]
+            margin 8px 0px
+            padding 8px 3px
+            width 85%
+            background $white
+            border none
+            border-bottom 1px solid rgba(black, 1)
+            
+            &::-webkit-input-placeholder
+                color rgba($blue, 0.5)
+            &:-moz-placeholder
+                color rgba($blue, 0.5)
+            &::-moz-placeholder
+                color rgba($blue, 0.5)
+            &:-ms-input-placeholder
+                color rgba($blue, 0.5)
+    .footnote
+        position absolute
+        width 100%
+        bottom 0
+        height 55px
+        display block
+        border none
+        border-radius 0 0 10px 10px
+        gradient(90deg, $blue, $lightblue)
+        line-height 55px
+        color $white
+        font-size 1.3em
+        transition 0.2s
+        cursor pointer
+
+        &:hover
+            color $blue
+
+
+div#login
+    width 320px
+    height 275px
+
+    div.noaccount
+        position absolute
+        bottom -20px
+        color $white
+        a
+            color $lightblue
+
+div#register
+    width 320px
+    height 450px
+
+
+
 
 
 

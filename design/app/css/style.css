@@ -14,6 +14,7 @@ html {
 }
 * {
   box-sizing: border-box;
+  font-family: 'robotolight', Arial, sans-serif;
 }
 body {
   background: url("https://hd.unsplash.com/photo-1470104240373-bc1812eddc9f");
@@ -29,9 +30,7 @@ body::before {
   left: 0;
   z-index: -1;
 }
-div#upload {
-  width: 600px;
-  height: 300px;
+div.block {
   background: #fafafa;
   box-shadow: 0px 0px 50px rgba(0,0,0,0.5);
   position: absolute;
@@ -40,9 +39,12 @@ div#upload {
   -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
   text-align: center;
-  font-family: 'robotolight', Arial, sans-serif;
   line-height: 10px;
   border-radius: 10px;
+}
+div#upload {
+  width: 600px;
+  height: 300px;
 }
 div#upload div.info {
   width: 50%;
@@ -82,4 +84,81 @@ div#upload div.footnote {
   background: #0277bd;
   background: linear-gradient(90deg, #0277bd, #29b6f6);
   border-radius: 0 0 10px 10px;
+}
+div.logreg div {
+  position: absolute;
+  width: 100%;
+}
+div.logreg div.info {
+  top: 0;
+  height: calc(80% - 55px);
+  border-radius: 10px 10px 0 0;
+  line-height: initial;
+  padding: 15px;
+}
+div.logreg div.info h1 {
+  color: #0277bd;
+  background: -webkit-linear-gradient(#0277bd, #29b6f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+div.logreg div.info input[type=text],
+div.logreg div.info input[type=password] {
+  margin: 8px 0px;
+  padding: 8px 3px;
+  width: 85%;
+  background: #fafafa;
+  border: none;
+  border-bottom: 1px solid #000;
+}
+div.logreg div.info input[type=text]::-webkit-input-placeholder,
+div.logreg div.info input[type=password]::-webkit-input-placeholder {
+  color: rgba(2,119,189,0.5);
+}
+div.logreg div.info input[type=text]:-moz-placeholder,
+div.logreg div.info input[type=password]:-moz-placeholder {
+  color: rgba(2,119,189,0.5);
+}
+div.logreg div.info input[type=text]::-moz-placeholder,
+div.logreg div.info input[type=password]::-moz-placeholder {
+  color: rgba(2,119,189,0.5);
+}
+div.logreg div.info input[type=text]:-ms-input-placeholder,
+div.logreg div.info input[type=password]:-ms-input-placeholder {
+  color: rgba(2,119,189,0.5);
+}
+div.logreg .footnote {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 55px;
+  display: block;
+  border: none;
+  border-radius: 0 0 10px 10px;
+  background: #0277bd;
+  background: linear-gradient(90deg, #0277bd, #29b6f6);
+  line-height: 55px;
+  color: #fafafa;
+  font-size: 1.3em;
+  transition: 0.2s;
+  cursor: pointer;
+}
+div.logreg .footnote:hover {
+  color: #0277bd;
+}
+div#login {
+  width: 320px;
+  height: 275px;
+}
+div#login div.noaccount {
+  position: absolute;
+  bottom: -20px;
+  color: #fafafa;
+}
+div#login div.noaccount a {
+  color: #29b6f6;
+}
+div#register {
+  width: 320px;
+  height: 450px;
 }
