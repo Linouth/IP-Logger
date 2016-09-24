@@ -1,0 +1,83 @@
+@import '__variables'
+@import '__fonts'
+
+
+body, html
+    margin 0
+    padding 0
+    width 100%
+    height 100%
+*
+    box-sizing border-box
+    // font-family Tahoma,Verdana,Segoe,sans-serif
+body
+    background url('https://hd.unsplash.com/photo-1470104240373-bc1812eddc9f')
+    background-size cover
+
+    &::before
+        width 100%
+        height 100%
+        content ''
+        display block
+        position absolute
+        top 0
+        left 0
+        // background rgba(black, 0.3)
+        z-index -1
+
+div#upload
+    width 600px
+    height 300px
+    background $white
+    // border 1px solid $gray
+    box-shadow 0px 0px 50px rgba(black, 0.5)
+
+    position absolute
+    left 50%
+    top 50%
+    transform translate(-50%, -50%)
+
+    text-align center
+    font-family 'robotolight', Arial, sans-serif
+    line-height 10px
+    border-radius 10px
+
+    & div.info
+        width 50%
+        position absolute
+        left 50%
+        top 20%
+        transform translateX(-50%)
+        line-height 5px
+
+        background -webkit-linear-gradient($blue, $lightblue)
+        -webkit-background-clip text
+        -webkit-text-fill-color transparent
+
+        display flex
+        flex-wrap wrap
+        justify-content space-between
+
+        padding 10px 0px
+
+        & span:nth-of-type(1)
+            font-size 1.8em
+            // flex-grow 1
+        & h1
+            font-size 5em
+            flex-grow 1
+
+
+    & div.footnote
+        position absolute
+        bottom 0
+        left 0
+        width 100%
+        height 50px
+        line-height 50px
+        color white
+        gradient(90deg, #0277BD, #29B6F6)
+        border-radius 0 0 10px 10px
+
+
+
