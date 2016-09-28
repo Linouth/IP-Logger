@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% block title %}Upload{% endblock %}
 {% block content %}
-    <h1>Upload file</h1>
-    <form action="" method=post enctype=multipart/form-data>
-        <input type=file name=file />
-        <input type=submit value=Upload />
-    </form>
+    <div id="upload" class="block">
+        <div class="info">
+            <span>Hey there,</span><span>you can</span>
+            <h1>UPLOAD</h1>
+            <span>your</span> <span>images</span> <span>right</span> <span>here</span>
+            <!-- <h2>Upload images up to 100MiB</h2> -->
+            <!-- <p>Click here or drag and drop images to upload.</p> -->
+        </div>
+        <div class="footnote">
+            You can upload files up to 100MiB
+        </div>
+        <form action="" method=post enctype=multipart/form-data style='display: none'>
+            <input type=file name=file />
+            <input type=submit value=Upload />
+        </form>
+    </div>
 {% endblock %}
