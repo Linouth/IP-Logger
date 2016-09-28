@@ -1,6 +1,8 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <script src='js/jquery.min.js'></script>
+        <script src='js/script.js'></script>
     </head>
     <body>
         <div id="upload" class="block">
@@ -14,6 +16,10 @@
             <div class="footnote">
                 You can upload files up to 100MiB
             </div>
+            <form action="" method=post enctype=multipart/form-data style='display: none'>
+                <input type=file name=file />
+                <input type=submit value=Upload />
+            </form>
         </div>
     </body>
 </html>

@@ -162,3 +162,16 @@ div#register {
   width: 320px;
   height: 450px;
 }
+ul.flashes {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 5px 0;
+  text-align: center;
+  list-style: none;
+  z-index: 1;
+  background: #0277bd;
+  background: linear-gradient(90deg, #0277bd, #29b6f6);
+  color: #fafafa;
+}
