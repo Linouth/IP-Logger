@@ -6,7 +6,7 @@ var gulp            = require('gulp'),
 
 
 var paths = {
-    css:    'src/css/**/*.styl',
+    css:    ['src/css/**/*.styl', '!./src/css/**/__*.styl'],
     html:   'src/*.html',
     js:     'src/js/*.js',
     img:    'src/img/*'
@@ -25,6 +25,7 @@ gulp.task('html', function() {
 gulp.task('style', function() {
     gulp.src(paths.css)
         .pipe(plumber())
+        // .pipe(gulpif(condition,
         .pipe(stylus({
             compress: false
         }))

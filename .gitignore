@@ -3,3 +3,4 @@ app/uploads
 app/__pycache__
 design/node_modules
 design/tmp
+design/app
