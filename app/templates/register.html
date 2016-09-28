@@ -1,14 +1,21 @@
+{% import 'macros.html' as macros %}
 {% extends 'base.html' %}
 {% block title %}Register{% endblock %}
 {% block content %}
     <form action='' method=post>
-        <div>Register.</div>
-        {{ form.csrf_token }}
-        {{ form.username.label }} {{ form.username() }}
-        {{ form.email.label }} {{ form.email() }}
-        {{ form.invite_key.label }} {{ form.invite_key() }}
-        {{ form.password.label }} {{ form.password() }}
-        {{ form.confirm.label }} {{ form.confirm() }}
-        <input type=submit value=Register />
+        <div id="register" class="block logreg">
+            <form action='' method=POST>
+                <div class="info">
+                    <h1>HEY THERE</h1>
+                    {{ form.csrf_token }}
+                    {{ macros.input(form.username) }}
+                    {{ macros.input(form.email) }}
+                    {{ macros.input(form.invite_key) }}
+                    {{ macros.input(form.password) }}
+                    {{ macros.input(form.confirm) }}
+                </div>
+                <input type=submit value=REGISTER class="footnote register" />
+            </form>
+        </div>
     </form>
 {% endblock %}

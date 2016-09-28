@@ -1,11 +1,17 @@
+{% import 'macros.html' as macros %}
 {% extends 'base.html' %}
 {% block title %}Login{% endblock %}
 {% block content %}
-    <form action='' method=post>
-        <div>Login.</div>
-        {{ form.csrf_token }}
-        {{ form.username.label }} {{ form.username() }}
-        {{ form.password.label }} {{ form.password() }}
-        <input type=submit value=Login />
-    </form>
+    <div id="login" class="block logreg">
+        <form action='' method=POST>
+            <div class="info">
+                <h1>WELCOME BACK!</h1>
+                {{ form.csrf_token }}
+                {{ macros.input(form.username) }}
+                {{ macros.input(form.password) }}
+            </div>
+            <input type=submit value="SIGN IN" class="footnote signin" />
+            <div class="noaccount">Don't have an account? <a href="{{ url_for('register') }}">Register Here</a></div>
+        </form>
+    </div>
 {% endblock %}
